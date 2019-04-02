@@ -1,9 +1,24 @@
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.android.library'
+
+publish {
+
+    def groupProjectID = 'in.codeshuffle.linkpreviewedittext'
+    def artifactProjectID = 'LinkPreviewEditText'
+    def publishVersionID = '1.0.0'
+
+    userOrg = 'skymansandy'
+    repoName = 'LinkPreviewEditText'
+    groupId = groupProjectID
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = 'A simple Android library for link preview in EditText (like in WhatsApp)'
+    website = 'https://github.com/skymansandy/linkPreviewEditText'
+
+}
 
 android {
     compileSdkVersion 28
-
-
 
     defaultConfig {
         minSdkVersion 16
