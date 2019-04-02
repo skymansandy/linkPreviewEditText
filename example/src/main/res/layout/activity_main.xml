@@ -15,4 +15,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <in.codeshuffle.linkpreviewedittext.ui.LinkPreviewEditText
+        android:layout_width="match_parent"
+        app:linkInfoViewStyle="TypeSkype"
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LinkPreviewEditText</string>
+    <string name="link_image">Link image</string>
 </resources>
