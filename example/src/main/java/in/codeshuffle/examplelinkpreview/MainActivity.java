@@ -21,8 +21,13 @@ public class MainActivity extends AppCompatActivity implements LinkPreviewListen
     }
 
     @Override
-    public void onLinkPreview(LinkInfo linkInfo) {
+    public void onLinkPreviewOpen(LinkInfo linkInfo) {
         Log.d("NICE", linkInfo.toString());
+    }
+
+    @Override
+    public void onNoLinkPreview() {
+        Log.d("NICE", "Preview closed");
     }
 
     @Override

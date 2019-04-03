@@ -42,7 +42,14 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
         return showingPreview;
     }
 
-    public void setShowingPreview(String previewUrl, boolean showingPreview) {
+    public void setShowingPreview(boolean showingPreview) {
+        this.showingPreview = showingPreview;
+        if (!showingPreview) {
+            closeExistingPreview();
+        }
+    }
+
+    private void setLinkPreviewData(String previewUrl, boolean showingPreview) {
         this.showingPreview = showingPreview;
         if (isShowingPreview()) {
             this.previewingUrl = previewUrl;
@@ -77,15 +84,26 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
             // iterate through parts
             for (String item : parts) {
                 if (Utils.urlPattern.matcher(item).matches()) {
-                    if (!showingPreview || !previewingUrl.equals(item))
+                    if (!showingPreview || !previewingUrl.equals(item)) {
+                        if (showingPreview) {
+                            closeExistingPreview();
+                        }
                         findExactLinkPreview(item);
+                    }
+                    //Return must be in the first url match, because we only show the first url preview
                     return;
                 }
             }
-            if (linkPreviewListener != null) {
-                linkPreviewListener.onLinkPreviewError("No URL found");
-            }
+            closeExistingPreview();
         }
+    }
+
+    /**
+     * Closes the existing preview
+     */
+    private void closeExistingPreview() {
+        if (linkPreviewListener != null)
+            linkPreviewListener.onNoLinkPreview();
     }
 
     /**
@@ -107,6 +125,6 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
 
     @Override
     public void onPreviewDataChanged(String previewUrl, boolean isShowing) {
-        setShowingPreview(previewUrl, isShowing);
+        setLinkPreviewData(previewUrl, isShowing);
     }
 }
