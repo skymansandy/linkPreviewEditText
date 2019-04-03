@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LinkPreviewEditText</string>
+    <string name="write_something">Write something</string>
 </resources>

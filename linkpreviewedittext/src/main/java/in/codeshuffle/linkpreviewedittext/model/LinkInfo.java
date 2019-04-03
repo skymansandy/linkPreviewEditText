@@ -1,5 +1,7 @@
 package in.codeshuffle.linkpreviewedittext.model;
 
+import android.support.annotation.NonNull;
+
 public class LinkInfo {
     private String url;
     private String domainUrl;
@@ -16,19 +18,6 @@ public class LinkInfo {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    @Override
-    public String toString() {
-        return "LinkInfo{" +
-                "domainUrl='" + domainUrl + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", siteName='" + siteName + '\'' +
-                ", mediaType='" + mediaType + '\'' +
-                ", faviconUrl='" + faviconUrl + '\'' +
-                '}';
     }
 
     public String getDomainUrl() {
@@ -85,5 +74,19 @@ public class LinkInfo {
 
     public void setFaviconUrl(String faviconUrl) {
         this.faviconUrl = faviconUrl;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "LinkInfo{" +
+                "domainUrl='" + domainUrl + '\'' +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", siteName='" + siteName + '\'' +
+                ", mediaType='" + mediaType + '\'' +
+                ", faviconUrl='" + faviconUrl + '\'' +
+                '}';
     }
 }

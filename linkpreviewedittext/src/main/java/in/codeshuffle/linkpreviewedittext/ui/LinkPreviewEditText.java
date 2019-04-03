@@ -1,34 +1,22 @@
 package in.codeshuffle.linkpreviewedittext.ui;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatEditText;
+import android.text.Editable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-
-import in.codeshuffle.linkpreviewedittext.R;
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
-import in.codeshuffle.linkpreviewedittext.model.LinkInfo;
 import in.codeshuffle.linkpreviewedittext.scraper.LinkScraper;
-import in.codeshuffle.linkpreviewedittext.util.GlideApp;
+import in.codeshuffle.linkpreviewedittext.util.Utils;
 
-public class LinkPreviewEditText extends LinearLayout {
+public class LinkPreviewEditText extends AppCompatEditText implements LinkScraper.LinkPreviewCallback {
 
-    private View view;
-    private LinearLayout linearLayout;
-    private ImageView imageView;
-    private TextView textViewTitle;
-    private TextView textViewDesc;
-    private TextView textViewUrl;
+    private boolean detectLinks = false;
+    private boolean showingPreview = false;
+    private String previewingUrl = "";
+    private LinkPreviewListener linkPreviewListener;
+    private LinkScraper linkScraper;
 
     public LinkPreviewEditText(Context context) {
         super(context);
@@ -46,61 +34,79 @@ public class LinkPreviewEditText extends LinearLayout {
     }
 
     private void initView(final Context context, AttributeSet attributeSet, int defAttrSet) {
-        setupView(context);
-        getViewReferences();
-        setVisibility(GONE);
-        new LinkScraper(new LinkPreviewListener() {
-            @Override
-            public void onLinkDetails(LinkInfo linkInfo) {
-                GlideApp.with(context)
-                        .load(linkInfo.getImageUrl())
-                        .addListener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                setVisibility(VISIBLE);
-                                return false;
-                            }
-                        })
-                        .into(imageView);
-                Log.d("NICE", linkInfo.toString());
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.d("NICE", "onError: Not nice");
-            }
-        }).getLinkPreview("https://bintray.com/skymansandy");
+        linkScraper = new LinkScraper();
+        linkScraper.setLinkPreviewCallback(this);
     }
 
-    private void getViewReferences() {
-        linearLayout = findViewById(R.id.link_info_card);
-        imageView = findViewById(R.id.link_image);
-        textViewTitle = findViewById(R.id.link_title);
-        textViewDesc = findViewById(R.id.link_desc);
-        textViewUrl = findViewById(R.id.link_url);
+    public boolean isShowingPreview() {
+        return showingPreview;
+    }
+
+    public void setShowingPreview(String previewUrl, boolean showingPreview) {
+        this.showingPreview = showingPreview;
+        if (isShowingPreview()) {
+            this.previewingUrl = previewUrl;
+        }
+    }
+
+    public void setLinkPreviewListener(LinkPreviewListener linkPreviewListener) {
+        this.linkPreviewListener = linkPreviewListener;
+        this.linkScraper.setLinkPreviewListener(linkPreviewListener);
     }
 
     /**
-     * @param context context of the view
+     * Detect urls and fetch preview as user types through EditText
+     *
+     * @param shouldDetectLinks true or false
      */
-    private void setupView(Context context) {
-        if (findLinearLayoutChild() != null) {
-            this.view = findLinearLayoutChild();
+    public void detectLinksWhileTyping(boolean shouldDetectLinks) {
+        this.detectLinks = shouldDetectLinks;
+    }
+
+
+    /**
+     * Find through the text entered in EditText and fetch preview if possible
+     */
+    public void findAndRequestLinkPreview() {
+        Editable urlEditable = getText();
+        if (urlEditable == null) {
+            if (linkPreviewListener != null)
+                linkPreviewListener.onLinkPreviewError("Something went wrong");
         } else {
-            this.view = this;
-            inflate(context, R.layout.link_info_whatsapp_style, this);
+            String[] parts = urlEditable.toString().split("\\s+");
+            // iterate through parts
+            for (String item : parts) {
+                if (Utils.urlPattern.matcher(item).matches()) {
+                    if (!showingPreview || !previewingUrl.equals(item))
+                        findExactLinkPreview(item);
+                    return;
+                }
+            }
+            if (linkPreviewListener != null) {
+                linkPreviewListener.onLinkPreviewError("No URL found");
+            }
         }
     }
 
-    protected LinearLayout findLinearLayoutChild() {
-        if (getChildCount() > 0 && getChildAt(0) instanceof LinearLayout) {
-            return (LinearLayout) getChildAt(0);
+    /**
+     * Find preview for exact specified url
+     *
+     * @param url url to fetch preview of
+     */
+    private void findExactLinkPreview(String url) {
+        linkScraper.getLinkPreview(url);
+    }
+
+    @Override
+    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
+        super.onTextChanged(text, start, lengthBefore, lengthAfter);
+        if (detectLinks) {
+            findAndRequestLinkPreview();
         }
-        return null;
+    }
+
+    @Override
+    public void onPreviewDataChanged(String previewUrl, boolean isShowing) {
+        setShowingPreview(previewUrl, isShowing);
     }
 }

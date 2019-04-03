@@ -2,20 +2,31 @@ package in.codeshuffle.examplelinkpreview;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
-import java.util.ArrayList;
+import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
+import in.codeshuffle.linkpreviewedittext.model.LinkInfo;
+import in.codeshuffle.linkpreviewedittext.ui.LinkPreviewEditText;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LinkPreviewListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        LinkPreviewEditText linkPreviewEditText = findViewById(R.id.linkPreviewEditText);
+        linkPreviewEditText.setLinkPreviewListener(this);
+        linkPreviewEditText.detectLinksWhileTyping(true);
     }
 
+    @Override
+    public void onLinkPreview(LinkInfo linkInfo) {
+        Log.d("NICE", linkInfo.toString());
+    }
+
+    @Override
+    public void onLinkPreviewError(String errorMsg) {
+        Log.d("NICE", errorMsg);
+    }
 }
