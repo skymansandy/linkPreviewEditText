@@ -1,15 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/chat_bg"
     tools:context=".MainActivity">
 
-    <in.codeshuffle.linkpreviewedittext.LinkPreviewEditText
-        android:id="@+id/linkPreviewEditText"
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:title="@string/link_preview_edit_text"
+        app:titleTextColor="@color/white" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:hint="@string/write_something" />
+        android:layout_marginBottom="7dp"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+        <include
+            android:id="@+id/linkPreviewLayout"
+            layout="@layout/whatsapp_link_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <in.codeshuffle.linkpreviewedittext.LinkPreviewEditText
+            android:id="@+id/linkPreviewEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:hint="@string/write_something"
+            android:padding="10dp" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,59 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/link_info_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:background="@drawable/bg_card"
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/link_image"
-        android:layout_width="110dp"
-        android:layout_height="90dp"
+        android:id="@+id/linkImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:contentDescription="@string/link_image"
         android:scaleType="centerCrop"
         tools:src="@tools:sample/avatars" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/light_gray"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="7dp">
+
+        <ImageView
+            android:id="@+id/closePreview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/close_link_preview"
+            android:padding="5dp"
+            android:src="@drawable/ic_close_black" />
+
 
         <TextView
-            android:id="@+id/link_title"
+            android:id="@+id/linkTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="2dp"
-            android:textColor="@color/grey_900"
-            android:textStyle="bold"
-            tools:text="Data" />
-
-        <TextView
-            android:id="@+id/link_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/closePreview"
             android:ellipsize="end"
             android:maxLines="2"
             android:padding="2dp"
-            android:textColor="@color/blue_grey_300"
-            tools:text="Data" />
+            android:textColor="@color/black"
+            tools:text="Data\nDate" />
 
         <TextView
-            android:id="@+id/link_url"
+            android:id="@+id/linkDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/linkTitle"
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="2dp"
-            android:textColor="@color/blue_grey_700"
+            android:textColor="@color/gray"
+            tools:text="Data\nHey" />
+
+        <TextView
+            android:id="@+id/linkUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linkDesc"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:padding="2dp"
+            android:textColor="@color/dark_gray"
             tools:text="Data" />
 
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

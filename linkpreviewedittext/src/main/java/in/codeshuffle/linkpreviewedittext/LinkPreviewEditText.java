@@ -1,13 +1,13 @@
 package in.codeshuffle.linkpreviewedittext;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatEditText;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.AttributeSet;
-import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import android.text.Editable;
+import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatEditText;
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
 
 public class LinkPreviewEditText extends AppCompatEditText implements LinkScraper.LinkPreviewCallback {
@@ -42,17 +42,12 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
         return showingPreview;
     }
 
-    public void setShowingPreview(boolean showingPreview) {
-        this.showingPreview = showingPreview;
-        if (!showingPreview) {
-            closeExistingPreview();
-        }
-    }
-
     private void setLinkPreviewData(String previewUrl, boolean showingPreview) {
         this.showingPreview = showingPreview;
         if (isShowingPreview()) {
             this.previewingUrl = previewUrl;
+        } else {
+            this.previewingUrl = "";
         }
     }
 
@@ -88,10 +83,8 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
                 // iterate through parts
                 for (String item : parts) {
                     if (Utils.urlPattern.matcher(item).matches()) {
-                        if (!showingPreview || !previewingUrl.equals(item)) {
-                            if (showingPreview) {
-                                closeExistingPreview();
-                            }
+                        if (!previewingUrl.equals(item)) {
+                            closeExistingPreview();
                             findExactLinkPreview(item);
                         }
                         //Return must be in the first url match, because we only show the first url preview
@@ -99,7 +92,7 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
                     }
                 }
                 //No links, so call no showing preview
-                setShowingPreview(false);
+                closeExistingPreview();
             }
         }
     }
@@ -108,8 +101,11 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
      * Closes the existing preview
      */
     private void closeExistingPreview() {
-        if (showingPreview && linkPreviewListener != null)
+        if (showingPreview && linkPreviewListener != null) {
             linkPreviewListener.onNoLinkPreview();
+        }
+        this.previewingUrl = "";
+        this.showingPreview = false;
     }
 
     /**
@@ -132,5 +128,9 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
     @Override
     public void onPreviewDataChanged(String previewUrl, boolean isShowing) {
         setLinkPreviewData(previewUrl, isShowing);
+    }
+
+    public void closePreview() {
+        closeExistingPreview();
     }
 }
