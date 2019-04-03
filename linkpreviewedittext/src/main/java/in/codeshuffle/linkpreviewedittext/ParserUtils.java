@@ -1,4 +1,4 @@
-package in.codeshuffle.linkpreviewedittext.scraper;
+package in.codeshuffle.linkpreviewedittext;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -6,10 +6,6 @@ import org.jsoup.select.Elements;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import in.codeshuffle.linkpreviewedittext.model.LinkInfo;
-import in.codeshuffle.linkpreviewedittext.util.DocumentUtils;
-import in.codeshuffle.linkpreviewedittext.util.Utils;
 
 class ParserUtils {
 

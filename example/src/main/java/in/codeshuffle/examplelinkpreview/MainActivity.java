@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
-import in.codeshuffle.linkpreviewedittext.model.LinkInfo;
-import in.codeshuffle.linkpreviewedittext.ui.LinkPreviewEditText;
+import in.codeshuffle.linkpreviewedittext.LinkInfo;
+import in.codeshuffle.linkpreviewedittext.LinkPreviewEditText;
 
 public class MainActivity extends AppCompatActivity implements LinkPreviewListener {
 

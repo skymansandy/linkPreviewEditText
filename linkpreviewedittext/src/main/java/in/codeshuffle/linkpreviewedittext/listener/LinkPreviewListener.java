@@ -1,6 +1,6 @@
 package in.codeshuffle.linkpreviewedittext.listener;
 
-import in.codeshuffle.linkpreviewedittext.model.LinkInfo;
+import in.codeshuffle.linkpreviewedittext.LinkInfo;
 
 public interface LinkPreviewListener {
     void onLinkPreviewOpen(LinkInfo linkInfo);

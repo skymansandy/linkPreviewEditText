@@ -1,4 +1,4 @@
-package in.codeshuffle.linkpreviewedittext.model;
+package in.codeshuffle.linkpreviewedittext;
 
 import android.support.annotation.NonNull;
 

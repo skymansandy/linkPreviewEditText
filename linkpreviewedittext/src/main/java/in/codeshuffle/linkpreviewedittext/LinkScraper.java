@@ -1,4 +1,4 @@
-package in.codeshuffle.linkpreviewedittext.scraper;
+package in.codeshuffle.linkpreviewedittext;
 
 import android.os.AsyncTask;
 
@@ -9,25 +9,24 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
-import in.codeshuffle.linkpreviewedittext.model.LinkInfo;
 
-public class LinkScraper {
+class LinkScraper {
 
     private LinkPreviewListener linkPreviewListener;
     private LinkPreviewCallback linkPreviewCallback;
 
-    public LinkScraper() {
+    LinkScraper() {
     }
 
-    public void setLinkPreviewListener(LinkPreviewListener linkPreviewListener) {
+    void setLinkPreviewListener(LinkPreviewListener linkPreviewListener) {
         this.linkPreviewListener = linkPreviewListener;
     }
 
-    public void setLinkPreviewCallback(LinkPreviewCallback linkPreviewCallback) {
+    void setLinkPreviewCallback(LinkPreviewCallback linkPreviewCallback) {
         this.linkPreviewCallback = linkPreviewCallback;
     }
 
-    public void getLinkPreview(String url) {
+    void getLinkPreview(String url) {
         new LinkParser(url, linkPreviewListener, linkPreviewCallback).execute();
     }
 

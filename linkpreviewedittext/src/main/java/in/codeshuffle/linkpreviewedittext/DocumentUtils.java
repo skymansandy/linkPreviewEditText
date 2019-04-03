@@ -1,4 +1,4 @@
-package in.codeshuffle.linkpreviewedittext.util;
+package in.codeshuffle.linkpreviewedittext;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -7,7 +7,7 @@ import org.jsoup.select.Elements;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class DocumentUtils {
+class DocumentUtils {
 
     /**
      * Get title of the document
@@ -15,7 +15,7 @@ public class DocumentUtils {
      * @param document document object
      * @return description of the url
      */
-    public static String getLinkTitle(Document document) {
+    static String getLinkTitle(Document document) {
         String title = document.select("meta[property=og:title]")
                 .attr("content");
         if (title == null || title.isEmpty()) {
@@ -30,7 +30,7 @@ public class DocumentUtils {
      * @param document document object
      * @return description of the url
      */
-    public static String getDescription(Document document) {
+    static String getDescription(Document document) {
         String description = document.select("meta[name=description]")
                 .attr("content");
         if (description == null || description.isEmpty()) {
@@ -51,7 +51,7 @@ public class DocumentUtils {
      * @param document document object
      * @return description of the url
      */
-    public static String getMediaType(Document document) {
+    static String getMediaType(Document document) {
         Elements mediaTypes = document.select("meta[name=medium]");
         if (mediaTypes.size() > 0) {
             String media = mediaTypes.attr("content");
@@ -67,7 +67,7 @@ public class DocumentUtils {
      * @param document document object
      * @return description of the url
      */
-    public static String getFaviconUrl(Document document) {
+    static String getFaviconUrl(Document document) {
         String url = document.select("link[rel=apple-touch-icon]").attr("href");
         if (!url.isEmpty()) {
             return Utils.resolveURL(url, url);
@@ -87,7 +87,7 @@ public class DocumentUtils {
      * @param document document object
      * @return description of the url
      */
-    public static String getImageUrl(String linkUrl, Document document) {
+    static String getImageUrl(String linkUrl, Document document) {
         String imageUrl = "";
         Elements imageElements = document.select("meta[property=og:image]");
         if (imageElements.size() > 0) {
@@ -122,7 +122,7 @@ public class DocumentUtils {
      * @param document document object
      * @return description of the url
      */
-    public static String getDomainUrl(String linkUrl, Document document) {
+    static String getDomainUrl(String linkUrl, Document document) {
         String domainUrl = "";
         Elements elements = document.getElementsByTag("meta");
         for (Element element : elements) {
@@ -156,7 +156,7 @@ public class DocumentUtils {
      * @param document document object
      * @return description of the url
      */
-    public static String getUrlTitle(Document document) {
+    static String getUrlTitle(Document document) {
         String siteName = "";
         Elements elements = document.getElementsByTag("meta");
         for (Element element : elements) {

@@ -1,14 +1,14 @@
-package in.codeshuffle.linkpreviewedittext.ui;
+package in.codeshuffle.linkpreviewedittext;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
-import in.codeshuffle.linkpreviewedittext.scraper.LinkScraper;
-import in.codeshuffle.linkpreviewedittext.util.Utils;
 
 public class LinkPreviewEditText extends AppCompatEditText implements LinkScraper.LinkPreviewCallback {
 
@@ -80,21 +80,27 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
             if (linkPreviewListener != null)
                 linkPreviewListener.onLinkPreviewError("Something went wrong");
         } else {
-            String[] parts = urlEditable.toString().split("\\s+");
-            // iterate through parts
-            for (String item : parts) {
-                if (Utils.urlPattern.matcher(item).matches()) {
-                    if (!showingPreview || !previewingUrl.equals(item)) {
-                        if (showingPreview) {
-                            closeExistingPreview();
+            String content = urlEditable.toString();
+            if (content.length() == 0) {
+                closeExistingPreview();
+            } else {
+                String[] parts = content.split("\\s+");
+                // iterate through parts
+                for (String item : parts) {
+                    if (Utils.urlPattern.matcher(item).matches()) {
+                        if (!showingPreview || !previewingUrl.equals(item)) {
+                            if (showingPreview) {
+                                closeExistingPreview();
+                            }
+                            findExactLinkPreview(item);
                         }
-                        findExactLinkPreview(item);
+                        //Return must be in the first url match, because we only show the first url preview
+                        return;
                     }
-                    //Return must be in the first url match, because we only show the first url preview
-                    return;
                 }
+                //No links, so call no showing preview
+                setShowingPreview(false);
             }
-            closeExistingPreview();
         }
     }
 
@@ -102,7 +108,7 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
      * Closes the existing preview
      */
     private void closeExistingPreview() {
-        if (linkPreviewListener != null)
+        if (showingPreview && linkPreviewListener != null)
             linkPreviewListener.onNoLinkPreview();
     }
 
