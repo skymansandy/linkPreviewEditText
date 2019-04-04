@@ -30,7 +30,7 @@ class LinkScraper {
         new LinkParser(url, linkPreviewListener, linkPreviewCallback).execute();
     }
 
-    public interface LinkPreviewCallback {
+    interface LinkPreviewCallback {
         void onPreviewDataChanged(String previewUrl, boolean isShowing);
     }
 

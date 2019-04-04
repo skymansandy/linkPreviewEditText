@@ -1,6 +1,7 @@
 package in.codeshuffle.linkpreviewedittext;
 
-import androidx.annotation.NonNull;
+
+import android.support.annotation.NonNull;
 
 public class LinkInfo {
     private String url;
@@ -11,21 +12,12 @@ public class LinkInfo {
     private String siteName;
     private String mediaType;
     private String faviconUrl;
-    private boolean isPreviewFetched = false;
-
-    public boolean isPreviewFetched() {
-        return isPreviewFetched;
-    }
-
-    public void setPreviewFetched(boolean previewFetched) {
-        isPreviewFetched = previewFetched;
-    }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    void setUrl(String url) {
         this.url = url;
     }
 
@@ -33,7 +25,7 @@ public class LinkInfo {
         return domainUrl;
     }
 
-    public void setDomainUrl(String domainUrl) {
+    void setDomainUrl(String domainUrl) {
         this.domainUrl = domainUrl;
     }
 
@@ -41,7 +33,7 @@ public class LinkInfo {
         return title;
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         this.title = title;
     }
 
@@ -49,7 +41,7 @@ public class LinkInfo {
         return description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
@@ -57,7 +49,7 @@ public class LinkInfo {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -65,7 +57,7 @@ public class LinkInfo {
         return siteName;
     }
 
-    public void setSiteName(String siteName) {
+    void setSiteName(String siteName) {
         this.siteName = siteName;
     }
 
@@ -73,7 +65,7 @@ public class LinkInfo {
         return mediaType;
     }
 
-    public void setMediaType(String mediaType) {
+    void setMediaType(String mediaType) {
         this.mediaType = mediaType;
     }
 
@@ -81,7 +73,7 @@ public class LinkInfo {
         return faviconUrl;
     }
 
-    public void setFaviconUrl(String faviconUrl) {
+    void setFaviconUrl(String faviconUrl) {
         this.faviconUrl = faviconUrl;
     }
 

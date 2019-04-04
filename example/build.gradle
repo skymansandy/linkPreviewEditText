@@ -37,8 +37,8 @@ dependencies {
     implementation project(path: ':linkpreviewedittext')
 
     //ButterKnife
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation 'com.jakewharton:butterknife:9.0.0-rc2'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
 
 
     //Glide

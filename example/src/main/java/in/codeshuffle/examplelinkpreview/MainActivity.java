@@ -2,6 +2,8 @@ package in.codeshuffle.examplelinkpreview;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import in.codeshuffle.linkpreviewedittext.LinkInfo;
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements LinkPreviewListen
     public void onLinkPreviewFound(LinkInfo linkInfo) {
         Log.d(TAG, "onLinkPreviewFound: " + linkInfo.toString());
         tvLinkTitle.setText(linkInfo.getTitle());
+
         tvLinkDesc.setText(linkInfo.getDescription());
         tvLinkUrl.setText(linkInfo.getUrl());
         tvLinkDesc.setVisibility(linkInfo.getDescription().length() == 0

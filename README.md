@@ -30,7 +30,7 @@ Have a look at the example app to see how a preview could have been shown like W
  
  ```
  dependencies {
-      implementation 'in.codeshuffle.linkpreviewedittext:LinkPreviewEditText:1.0.1'
+      implementation 'in.codeshuffle.linkpreviewedittext:LinkPreviewEditText:1.0.2'
  }
  ```
  
