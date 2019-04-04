@@ -12,7 +12,7 @@ publish {
     groupId = groupProjectID
     artifactId = artifactProjectID
     publishVersion = publishVersionID
-    desc = 'A simple Android library for link preview in EditText (like in WhatsApp)'
+    desc = 'A simple EditText library (built with AppCompatEditText and JSoup) where you can get preview of links typed in the EditText (For example, like in WhatsApp)'
     website = 'https://github.com/skymansandy/linkPreviewEditText'
 
 }
@@ -21,7 +21,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"

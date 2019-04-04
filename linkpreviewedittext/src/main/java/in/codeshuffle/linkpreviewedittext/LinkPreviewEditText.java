@@ -92,6 +92,8 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
                     if (Utils.urlPattern.matcher(item).matches()) {
                         if (!previewingUrl.equals(item)) {
                             closeExistingPreview();
+                            if (linkPreviewListener != null)
+                                linkPreviewListener.onLinkFound(item);
                             findExactLinkPreview(item);
                         }
                         //Return must be in the first url match, because we only show the first url preview

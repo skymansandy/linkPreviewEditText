@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
                 -> linkPreviewEditText.closePreview());
         linkPreviewEditText.setLinkPreviewListener(new LinkPreviewListener() {
             @Override
+            public void onLinkFound(String url) {
+                Log.d(TAG, "onLinkFound: " + url);
+            }
+
+            @Override
             public void onLinkPreviewOpen(LinkInfo linkInfo) {
                 Log.d(TAG, "onLinkPreviewOpen: " + linkInfo.toString());
                 tvLinkTitle.setText(linkInfo.getTitle());
