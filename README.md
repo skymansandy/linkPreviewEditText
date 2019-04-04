@@ -25,12 +25,12 @@ Have a look at the example app to see how a preview could have been shown like W
 
  
 # Usage
-## Dependency:
+##Dependency:
 
  
  ```
  dependencies {
-      implementation 'in.codeshuffle.linkpreviewedittext:LinkPreviewEditText:1.0.0'
+      implementation 'in.codeshuffle.linkpreviewedittext:LinkPreviewEditText:1.0.1'
  }
  ```
  
@@ -73,15 +73,15 @@ Implement the given interface and override these stuff:
           linkPreviewEditText.setLinkPreviewListener(this);
             
           //You'll have these callback methods.
+          //A link was found when content was being typed
+          void onLinkFound(String url);
+          
           //On getting a link preview of automatically detected url in the EditText, You'll get this callback with the LinkInfo object
           //LinkInfo explained later below this file
-          void onLinkPreviewOpen(LinkInfo linkInfo);
+          void onLinkPreviewFound(LinkInfo linkInfo);
             
           //You'll get this callback whenever an existing preview is closed for either manually closing it, or closed because of some internal purpose
           void onNoLinkPreview();
-          
-          //A link was found when content was being typed
-          void onLinkFound(String url);
             
           //In the rarest of the events when there is something wrong, you'll get this callback with the error message 
           void onLinkPreviewError(String errorMsg);

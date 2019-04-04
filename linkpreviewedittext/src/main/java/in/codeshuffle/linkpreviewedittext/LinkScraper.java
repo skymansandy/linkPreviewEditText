@@ -91,7 +91,7 @@ class LinkScraper {
                 linkPreviewCallback.onPreviewDataChanged(linkUrl, true);
             }
             if (linkPreviewListener != null) {
-                linkPreviewListener.onLinkPreviewOpen(linkInfo);
+                linkPreviewListener.onLinkPreviewFound(linkInfo);
             }
         }
 

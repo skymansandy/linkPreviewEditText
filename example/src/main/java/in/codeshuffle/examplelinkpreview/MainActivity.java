@@ -21,7 +21,7 @@ import in.codeshuffle.linkpreviewedittext.LinkInfo;
 import in.codeshuffle.linkpreviewedittext.LinkPreviewEditText;
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LinkPreviewListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -47,53 +47,52 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         linkPreviewEditText.detectLinksWhileTyping(true);
-        ivClosePreview.setOnClickListener(v
-                -> linkPreviewEditText.closePreview());
-        linkPreviewEditText.setLinkPreviewListener(new LinkPreviewListener() {
-            @Override
-            public void onLinkFound(String url) {
-                Log.d(TAG, "onLinkFound: " + url);
-            }
+        ivClosePreview.setOnClickListener(v -> linkPreviewEditText.closePreview());
+        linkPreviewEditText.setLinkPreviewListener(this);
+    }
 
-            @Override
-            public void onLinkPreviewOpen(LinkInfo linkInfo) {
-                Log.d(TAG, "onLinkPreviewOpen: " + linkInfo.toString());
-                tvLinkTitle.setText(linkInfo.getTitle());
-                tvLinkDesc.setText(linkInfo.getDescription());
-                tvLinkUrl.setText(linkInfo.getUrl());
-                tvLinkDesc.setVisibility(linkInfo.getDescription().length() == 0
-                        ? View.GONE : View.VISIBLE);
-                GlideApp.with(MainActivity.this)
-                        .load(linkInfo.getImageUrl())
-                        .addListener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                ivLinkImage.setVisibility(View.GONE);
-                                linkPreviewLayout.setVisibility(View.VISIBLE);
-                                return false;
-                            }
+    @Override
+    public void onLinkFound(String url) {
+        Log.d(TAG, "onLinkFound: " + url);
+    }
 
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                ivLinkImage.setVisibility(View.VISIBLE);
-                                linkPreviewLayout.setVisibility(View.VISIBLE);
-                                return false;
-                            }
-                        })
-                        .into(ivLinkImage);
-            }
+    @Override
+    public void onLinkPreviewFound(LinkInfo linkInfo) {
+        Log.d(TAG, "onLinkPreviewFound: " + linkInfo.toString());
+        tvLinkTitle.setText(linkInfo.getTitle());
+        tvLinkDesc.setText(linkInfo.getDescription());
+        tvLinkUrl.setText(linkInfo.getUrl());
+        tvLinkDesc.setVisibility(linkInfo.getDescription().length() == 0
+                ? View.GONE : View.VISIBLE);
+        GlideApp.with(MainActivity.this)
+                .load(linkInfo.getImageUrl())
+                .addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        ivLinkImage.setVisibility(View.GONE);
+                        linkPreviewLayout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
 
-            @Override
-            public void onNoLinkPreview() {
-                Log.d(TAG, "onNoLinkPreview: Closed");
-                linkPreviewLayout.setVisibility(View.GONE);
-            }
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        ivLinkImage.setVisibility(View.VISIBLE);
+                        linkPreviewLayout.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
+                .into(ivLinkImage);
+    }
 
-            @Override
-            public void onLinkPreviewError(String errorMsg) {
-                Log.d(TAG, "onLinkPreviewError: " + errorMsg);
-                linkPreviewLayout.setVisibility(View.GONE);
-            }
-        });
+    @Override
+    public void onNoLinkPreview() {
+        Log.d(TAG, "onNoLinkPreview: Closed");
+        linkPreviewLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onLinkPreviewError(String errorMsg) {
+        Log.d(TAG, "onLinkPreviewError: " + errorMsg);
+        linkPreviewLayout.setVisibility(View.GONE);
     }
 }
