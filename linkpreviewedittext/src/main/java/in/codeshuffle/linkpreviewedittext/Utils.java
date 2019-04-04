@@ -31,4 +31,8 @@ class Utils {
             return baseUri.toString();
         }
     }
+
+    static String getNonNullString(String str) {
+        return str == null ? "" : str;
+    }
 }

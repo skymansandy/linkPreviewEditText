@@ -11,6 +11,15 @@ public class LinkInfo {
     private String siteName;
     private String mediaType;
     private String faviconUrl;
+    private boolean isPreviewFetched = false;
+
+    public boolean isPreviewFetched() {
+        return isPreviewFetched;
+    }
+
+    public void setPreviewFetched(boolean previewFetched) {
+        isPreviewFetched = previewFetched;
+    }
 
     public String getUrl() {
         return url;

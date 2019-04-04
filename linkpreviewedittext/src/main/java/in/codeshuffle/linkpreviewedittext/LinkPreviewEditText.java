@@ -76,12 +76,19 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
                 linkPreviewListener.onLinkPreviewError("Something went wrong");
         } else {
             String content = urlEditable.toString();
+
+            //If empty content after text change, close the preview no matter what
             if (content.length() == 0) {
                 closeExistingPreview();
-            } else {
+            }
+            //Find for links otherwise
+            else {
+
+                //Split based on whitespace
                 String[] parts = content.split("\\s+");
                 // iterate through parts
                 for (String item : parts) {
+                    //If url pattern is matched, and the looking up url is not the previously fetched url, close the preview and make a search
                     if (Utils.urlPattern.matcher(item).matches()) {
                         if (!previewingUrl.equals(item)) {
                             closeExistingPreview();
@@ -91,14 +98,15 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
                         return;
                     }
                 }
-                //No links, so call no showing preview
+                //No links found in the text entered, so close the preview
                 closeExistingPreview();
             }
         }
     }
 
     /**
-     * Closes the existing preview
+     * Closes the existing preview, sets the preview Url empty and showingPreview bool to false
+     * and notifies the listener if there was a preview being shown
      */
     private void closeExistingPreview() {
         if (showingPreview && linkPreviewListener != null) {
@@ -121,6 +129,7 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
         if (detectLinks) {
+            //If auto detect link is on, then find for links as user types
             findAndRequestLinkPreview();
         }
     }
@@ -130,6 +139,9 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
         setLinkPreviewData(previewUrl, isShowing);
     }
 
+    /**
+     * Explicit method available for user, usable when needing to close the preview on their external UI (for example) button click
+     */
     public void closePreview() {
         closeExistingPreview();
     }

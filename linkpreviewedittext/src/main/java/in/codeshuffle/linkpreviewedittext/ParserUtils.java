@@ -140,30 +140,30 @@ class ParserUtils {
 
         //parse title
         String title = DocumentUtils.getLinkTitle(document);
-        linkInfo.setTitle(title);
+        linkInfo.setTitle(Utils.getNonNullString(title));
 
         //parse description
         String description = DocumentUtils.getDescription(document);
-        linkInfo.setDescription(description);
+        linkInfo.setDescription(Utils.getNonNullString(description));
 
         //parse favicon
         String faviconUrl = DocumentUtils.getFaviconUrl(document);
-        linkInfo.setFaviconUrl(faviconUrl);
+        linkInfo.setFaviconUrl(Utils.getNonNullString(faviconUrl));
 
         //parse mediaType
         String type = DocumentUtils.getMediaType(document);
-        linkInfo.setMediaType(type);
+        linkInfo.setMediaType(Utils.getNonNullString(type));
 
 
         //parse images
         String imageUrl = DocumentUtils.getImageUrl(originalUrl, document);
-        linkInfo.setImageUrl(imageUrl);
+        linkInfo.setImageUrl(Utils.getNonNullString(imageUrl));
 
         String domainUrl = DocumentUtils.getDomainUrl(originalUrl, document);
-        linkInfo.setDomainUrl(domainUrl);
+        linkInfo.setDomainUrl(Utils.getNonNullString(domainUrl));
 
         String siteName = DocumentUtils.getUrlTitle(document);
-        linkInfo.setSiteName(siteName);
+        linkInfo.setSiteName(Utils.getNonNullString(siteName));
 
         return linkInfo;
     }

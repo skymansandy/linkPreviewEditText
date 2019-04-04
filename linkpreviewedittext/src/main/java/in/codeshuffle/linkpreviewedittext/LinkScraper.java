@@ -73,6 +73,11 @@ class LinkScraper {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (linkInfo.getTitle() == null || linkInfo.getDescription() == null
+                    || linkInfo.getDomainUrl() == null)
+                return;
+
+            //Else
             throwSuccess(linkInfo);
         }
 
