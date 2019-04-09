@@ -1,10 +1,13 @@
-package in.codeshuffle.examplelinkpreview;
+package in.codeshuffle.examplelinkpreview.ui.fragment.demoscreen;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,13 +20,19 @@ import com.bumptech.glide.request.target.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import in.codeshuffle.examplelinkpreview.R;
+import in.codeshuffle.examplelinkpreview.ui.activity.main.MainActivity;
+import in.codeshuffle.examplelinkpreview.util.GlideApp;
 import in.codeshuffle.linkpreviewedittext.LinkInfo;
 import in.codeshuffle.linkpreviewedittext.LinkPreviewEditText;
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
 
-public class MainActivity extends AppCompatActivity implements LinkPreviewListener {
+public class DemoFragment extends Fragment implements LinkPreviewListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = DemoFragment.class.getSimpleName();
+
+    Unbinder unbinder;
 
     @BindView(R.id.linkImage)
     ImageView ivLinkImage;
@@ -40,15 +49,53 @@ public class MainActivity extends AppCompatActivity implements LinkPreviewListen
     @BindView(R.id.linkPreviewEditText)
     LinkPreviewEditText linkPreviewEditText;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+    public static DemoFragment getInstance() {
+        Bundle bundle = new Bundle();
+        DemoFragment demoFragment = new DemoFragment();
+        demoFragment.setArguments(bundle);
+        return demoFragment;
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_demo, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         linkPreviewEditText.detectLinksWhileTyping(true);
         ivClosePreview.setOnClickListener(v -> linkPreviewEditText.closePreview());
         linkPreviewEditText.setLinkPreviewListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -65,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements LinkPreviewListen
         tvLinkUrl.setText(linkInfo.getUrl());
         tvLinkDesc.setVisibility(linkInfo.getDescription().length() == 0
                 ? View.GONE : View.VISIBLE);
-        GlideApp.with(MainActivity.this)
+        GlideApp.with(getActivity())
                 .load(linkInfo.getImageUrl())
                 .addListener(new RequestListener<Drawable>() {
                     @Override
