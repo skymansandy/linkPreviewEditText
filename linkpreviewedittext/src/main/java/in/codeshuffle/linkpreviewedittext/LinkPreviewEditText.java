@@ -4,7 +4,10 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+
+import java.util.HashMap;
 
 import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
 
@@ -13,8 +16,34 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
     private boolean detectLinks = false;
     private boolean showingPreview = false;
     private String previewingUrl = "";
-    private LinkPreviewListener linkPreviewListener;
     private LinkScraper linkScraper;
+    private LinkPreviewListener linkPreviewListener;
+
+    //Caching
+    private boolean mEnableCache = false;
+    private HashMap<String, LinkInfo> linkPreviewCache = new HashMap<>();
+
+    //TextWatcher to watch text
+    private TextWatcher linkTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (detectLinks) {
+                //If auto detect link is on, then find for links as user types
+                findAndRequestLinkPreview();
+            }
+        }
+    };
+
 
     public LinkPreviewEditText(Context context) {
         super(context);
@@ -34,24 +63,16 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
     private void initView(final Context context, AttributeSet attributeSet, int defAttrSet) {
         linkScraper = new LinkScraper();
         linkScraper.setLinkPreviewCallback(this);
+        addTextChangedListener(linkTextWatcher);
     }
 
-    public boolean isShowingPreview() {
-        return showingPreview;
-    }
-
-    private void setLinkPreviewData(String previewUrl, boolean showingPreview) {
-        this.showingPreview = showingPreview;
-        if (isShowingPreview()) {
-            this.previewingUrl = previewUrl;
-        } else {
-            this.previewingUrl = "";
-        }
-    }
-
+    /**
+     * Set listener to get callback events about link preview
+     *
+     * @param linkPreviewListener listener instance
+     */
     public void setLinkPreviewListener(LinkPreviewListener linkPreviewListener) {
         this.linkPreviewListener = linkPreviewListener;
-        this.linkScraper.setLinkPreviewListener(linkPreviewListener);
     }
 
     /**
@@ -61,8 +82,12 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
      */
     public void detectLinksWhileTyping(boolean shouldDetectLinks) {
         this.detectLinks = shouldDetectLinks;
+        if (detectLinks) {
+            addTextChangedListener(linkTextWatcher);
+        } else {
+            removeTextChangedListener(linkTextWatcher);
+        }
     }
-
 
     /**
      * Find through the text entered in EditText and fetch preview if possible
@@ -77,7 +102,7 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
 
             //If empty content after text change, close the preview no matter what
             if (content.length() == 0) {
-                closeExistingPreview();
+                closeLinkPreview();
             }
             //Find for links otherwise
             else {
@@ -89,27 +114,36 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
                     //If url pattern is matched, and the looking up url is not the previously fetched url, close the preview and make a search
                     if (Utils.urlPattern.matcher(item).matches()) {
                         if (!previewingUrl.equals(item)) {
-                            closeExistingPreview();
+                            if (showingPreview) closeLinkPreview();
                             if (linkPreviewListener != null)
                                 linkPreviewListener.onLinkFound(item);
+                            //Check in cache
+                            if (mEnableCache && linkPreviewCache.containsKey(item)) {
+                                if (linkPreviewListener != null) {
+                                    onShowPreview(item, linkPreviewCache.get(item), true);
+                                }
+                                return;
+                            }
                             findExactLinkPreview(item);
                         }
                         //Return must be in the first url match, because we only show the first url preview
                         return;
                     }
                 }
+
                 //No links found in the text entered, so close the preview
-                closeExistingPreview();
+                closeLinkPreview();
             }
         }
     }
+
 
     /**
      * Closes the existing preview, sets the preview Url empty and showingPreview bool to false
      * and notifies the listener if there was a preview being shown
      */
-    private void closeExistingPreview() {
-        if (showingPreview && linkPreviewListener != null) {
+    private void closeLinkPreview() {
+        if (linkPreviewListener != null) {
             linkPreviewListener.onNoLinkPreview();
         }
         this.previewingUrl = "";
@@ -125,24 +159,41 @@ public class LinkPreviewEditText extends AppCompatEditText implements LinkScrape
         linkScraper.getLinkPreview(url);
     }
 
-    @Override
-    protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-        super.onTextChanged(text, start, lengthBefore, lengthAfter);
-        if (detectLinks) {
-            //If auto detect link is on, then find for links as user types
-            findAndRequestLinkPreview();
-        }
-    }
-
-    @Override
-    public void onPreviewDataChanged(String previewUrl, boolean isShowing) {
-        setLinkPreviewData(previewUrl, isShowing);
-    }
-
     /**
      * Explicit method available for user, usable when needing to close the preview on their external UI (for example) button click
      */
     public void closePreview() {
-        closeExistingPreview();
+        closeLinkPreview();
+    }
+
+    public void setCacheEnabled(boolean enableCache) {
+        this.mEnableCache = enableCache;
+        if (mEnableCache) {
+            linkPreviewCache.clear();
+        } else {
+            linkPreviewCache.clear();
+        }
+    }
+
+    @Override
+    public void onShowNoPreview() {
+        if (!showingPreview)
+            closeLinkPreview();
+    }
+
+    @Override
+    public void onShowPreview(String previewUrl, LinkInfo linkInfo, boolean fetchedFromCache) {
+        this.showingPreview = true;
+        this.previewingUrl = previewUrl;
+        if (mEnableCache && !fetchedFromCache) {
+            linkPreviewCache.put(previewUrl, linkInfo);
+        }
+        linkPreviewListener.onLinkPreviewFound(linkInfo, fetchedFromCache);
+    }
+
+    @Override
+    public void onPreviewError(String errorMsg) {
+        if (!showingPreview)
+            linkPreviewListener.onLinkPreviewError(errorMsg);
     }
 }

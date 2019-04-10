@@ -30,7 +30,7 @@ Have a look at the example app to see how a preview could have been shown like W
  
  ```
  dependencies {
-      implementation 'in.codeshuffle.linkpreviewedittext:LinkPreviewEditText:1.0.2'
+      implementation 'in.codeshuffle.linkpreviewedittext:LinkPreviewEditText:1.0.3'
  }
  ```
  
@@ -53,10 +53,13 @@ Have a look at the example app to see how a preview could have been shown like W
         LinkPreviewEditText linkPreviewEditText = findViewById(R.id.linkPreviewEditText);
         
         //Set whether to detect links automatically as you type the content. Turn it off to make it behave like a normal EditText.
-        linkPreviewEditText.detectLinksWhileTyping(true);
+        linkPreviewEditText.detectLinksWhileTyping(boolean);
         
         //Method to close the preview (if a preview open at the time you call this, you'll get a callback onNoLinkPreview. You can do your UI changes here)
         linkPreviewEditText.closePreview();
+        
+        //Cache enable/disable
+        linkPreviewEditText.setCacheEnabled(boolean);
         
  ``` 
  

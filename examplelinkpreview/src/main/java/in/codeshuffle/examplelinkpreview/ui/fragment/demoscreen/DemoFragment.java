@@ -80,6 +80,7 @@ public class DemoFragment extends Fragment implements LinkPreviewListener {
         linkPreviewEditText.detectLinksWhileTyping(true);
         ivClosePreview.setOnClickListener(v -> linkPreviewEditText.closePreview());
         linkPreviewEditText.setLinkPreviewListener(this);
+        linkPreviewEditText.setCacheEnabled(true);
     }
 
     @Override
@@ -104,8 +105,8 @@ public class DemoFragment extends Fragment implements LinkPreviewListener {
     }
 
     @Override
-    public void onLinkPreviewFound(LinkInfo linkInfo) {
-        Log.d(TAG, "onLinkPreviewFound: " + linkInfo.toString());
+    public void onLinkPreviewFound(LinkInfo linkInfo, boolean fromCache) {
+        Log.d(TAG, "onLinkPreviewFound: " + linkInfo.toString() + " from cache=" + fromCache);
         tvLinkTitle.setText(linkInfo.getTitle());
 
         tvLinkDesc.setText(linkInfo.getDescription());

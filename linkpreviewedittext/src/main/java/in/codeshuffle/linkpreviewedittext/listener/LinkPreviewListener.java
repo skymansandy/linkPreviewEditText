@@ -5,7 +5,7 @@ import in.codeshuffle.linkpreviewedittext.LinkInfo;
 public interface LinkPreviewListener {
     void onLinkFound(String url);
 
-    void onLinkPreviewFound(LinkInfo linkInfo);
+    void onLinkPreviewFound(LinkInfo linkInfo, boolean fromCache);
 
     void onNoLinkPreview();
 

@@ -32,9 +32,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    //Logger
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-
     //Circle image
     implementation 'com.mikhaellopez:circularimageview:3.0.2'
 
