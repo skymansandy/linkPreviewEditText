@@ -12,14 +12,9 @@ import in.codeshuffle.linkpreviewedittext.listener.LinkPreviewListener;
 
 class LinkScraper {
 
-    private LinkPreviewListener linkPreviewListener;
     private LinkPreviewCallback linkPreviewCallback;
 
     LinkScraper() {
-    }
-
-    void setLinkPreviewListener(LinkPreviewListener linkPreviewListener) {
-        this.linkPreviewListener = linkPreviewListener;
     }
 
     void setLinkPreviewCallback(LinkPreviewCallback linkPreviewCallback) {
@@ -27,32 +22,34 @@ class LinkScraper {
     }
 
     void getLinkPreview(String url) {
-        new LinkParser(url, linkPreviewListener, linkPreviewCallback).execute();
+        new LinkParser(url, linkPreviewCallback).execute();
     }
 
     interface LinkPreviewCallback {
-        void onPreviewDataChanged(String previewUrl, boolean isShowing);
+        void onShowNoPreview();
+
+        void onShowPreview(String previewUrl, LinkInfo linkInfo, boolean fromCache);
+
+        void onPreviewError(String errorMsg);
     }
 
     /**
      * AsyncTask for parsing stuff
      */
-    private static class LinkParser extends AsyncTask<Void, Void, Void> {
+    private static class LinkParser extends AsyncTask<Void, Void, String> {
 
         private String linkUrl;
         private LinkInfo linkInfo;
-        private LinkPreviewListener linkPreviewListener;
         private LinkPreviewCallback linkPreviewCallback;
 
-        LinkParser(String url, LinkPreviewListener linkPreviewListener, LinkPreviewCallback linkPreviewCallback) {
+        LinkParser(String url, LinkPreviewCallback linkPreviewCallback) {
             this.linkUrl = url;
             this.linkInfo = new LinkInfo();
-            this.linkPreviewListener = linkPreviewListener;
             this.linkPreviewCallback = linkPreviewCallback;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
             Document document;
             try {
                 document = Jsoup.connect(linkUrl).timeout(30 * 1000).get();
@@ -60,25 +57,28 @@ class LinkScraper {
                         .parseLinkDataModular(document);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-                throwError("Must supply valid url");
+                return "Must supply valid url";
             } catch (IOException e) {
                 e.printStackTrace();
-                throwError(MessageFormat.format("No Html Received from {0}", linkUrl));
+                return MessageFormat.format("No Html Received from {0}", linkUrl);
             } catch (Exception e) {
-                throwError(e.getLocalizedMessage());
+                return e.getLocalizedMessage();
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (linkInfo.getTitle() == null || linkInfo.getDescription() == null
-                    || linkInfo.getDomainUrl() == null)
-                return;
-
-            //Else
-            throwSuccess(linkInfo);
+        protected void onPostExecute(String aString) {
+            super.onPostExecute(aString);
+            //Success
+            if (aString == null) {
+                if (linkInfo.getTitle() == null || linkInfo.getDescription() == null
+                        || linkInfo.getDomainUrl() == null)
+                    return;
+                throwSuccess(linkInfo);
+            } else {
+                throwError(aString);
+            }
         }
 
         /**
@@ -88,10 +88,7 @@ class LinkScraper {
          */
         private void throwSuccess(LinkInfo linkInfo) {
             if (linkPreviewCallback != null) {
-                linkPreviewCallback.onPreviewDataChanged(linkUrl, true);
-            }
-            if (linkPreviewListener != null) {
-                linkPreviewListener.onLinkPreviewFound(linkInfo);
+                linkPreviewCallback.onShowPreview(linkUrl, linkInfo, false);
             }
         }
 
@@ -102,10 +99,8 @@ class LinkScraper {
          */
         private void throwError(String errorMsg) {
             if (linkPreviewCallback != null) {
-                linkPreviewCallback.onPreviewDataChanged("", false);
-            }
-            if (linkPreviewListener != null) {
-                linkPreviewListener.onLinkPreviewError(errorMsg);
+                linkPreviewCallback.onPreviewError(errorMsg);
+                linkPreviewCallback.onShowNoPreview();
             }
         }
     }
