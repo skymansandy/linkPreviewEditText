@@ -1,7 +1,7 @@
 package in.codeshuffle.linkpreviewedittext;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class LinkInfo {
     private String url;

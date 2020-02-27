@@ -2,10 +2,9 @@ apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.android.library'
 
 publish {
-
     def groupProjectID = 'in.codeshuffle.linkpreviewedittext'
     def artifactProjectID = 'LinkPreviewEditText'
-    def publishVersionID = '1.0.3'
+    def publishVersionID = '1.0.4'
 
     userOrg = 'skymansandy'
     repoName = 'LinkPreviewEditText'
@@ -14,20 +13,18 @@ publish {
     publishVersion = publishVersionID
     desc = 'A simple EditText library (built with AppCompatEditText and JSoup) where you can get preview of links typed in the EditText (For example, like in WhatsApp)'
     website = 'https://github.com/skymansandy/linkPreviewEditText'
-
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -36,15 +33,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
     testImplementation 'junit:junit:4.12'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     //JSoup
     implementation 'org.jsoup:jsoup:1.11.3'
