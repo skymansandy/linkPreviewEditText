@@ -2,20 +2,19 @@ package in.codeshuffle.examplelinkpreview.ui.fragment.aboutdev;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import in.codeshuffle.examplelinkpreview.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+
+import org.jetbrains.annotations.NotNull;
+
+import in.codeshuffle.examplelinkpreview.databinding.FragmentAboutDevBinding;
 
 public class AboutDevFragment extends DialogFragment {
-
-    Unbinder unbinder;
 
     public static AboutDevFragment getInstance() {
         Bundle bundle = new Bundle();
@@ -25,7 +24,7 @@ public class AboutDevFragment extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NotNull Context context) {
         super.onAttach(context);
     }
 
@@ -37,9 +36,8 @@ public class AboutDevFragment extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_about_dev, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        FragmentAboutDevBinding binding = FragmentAboutDevBinding.inflate(inflater);
+        return binding.getRoot();
     }
 
     @Override
@@ -55,11 +53,5 @@ public class AboutDevFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

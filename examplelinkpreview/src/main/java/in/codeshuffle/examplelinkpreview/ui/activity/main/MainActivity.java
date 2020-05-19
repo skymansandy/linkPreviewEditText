@@ -2,22 +2,20 @@ package in.codeshuffle.examplelinkpreview.ui.activity.main;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import android.view.MenuItem;
-import android.view.ViewGroup;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import com.google.android.material.navigation.NavigationView;
+
 import in.codeshuffle.examplelinkpreview.R;
+import in.codeshuffle.examplelinkpreview.databinding.ActivityMainBinding;
 import in.codeshuffle.examplelinkpreview.ui.fragment.aboutdev.AboutDevFragment;
 import in.codeshuffle.examplelinkpreview.ui.fragment.demoscreen.DemoFragment;
 import in.codeshuffle.examplelinkpreview.ui.fragment.webpagescreen.WebPageContent;
@@ -25,15 +23,6 @@ import in.codeshuffle.examplelinkpreview.ui.fragment.webpagescreen.WebPageFragme
 import in.codeshuffle.examplelinkpreview.util.AppUtils;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @BindView(R.id.navView)
-    NavigationView navigationView;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-    @BindView(R.id.container)
-    ViewGroup container;
 
     private FragmentManager fragmentManager;
     private DemoFragment demoFragment;
@@ -43,11 +32,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private WebPageFragment donateBeerFragment;
     private boolean doubleBackToExitPressedOnce = false;
 
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setupFragments();
         setupNavDrawer();
@@ -55,13 +46,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupActionbarWithToggle() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null) {
             ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-                    this, mDrawerLayout, toolbar,
+                    this, binding.drawerLayout, binding.toolbar,
                     R.string.navigation_drawer_open, R.string.navigation_drawer_close
             );
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
+            binding.drawerLayout.setDrawerListener(mDrawerToggle);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
             mDrawerToggle.syncState();
@@ -69,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setupNavDrawer() {
-        navigationView.setNavigationItemSelectedListener(this);
+        binding.navView.setNavigationItemSelectedListener(this);
     }
 
     private void setupFragments() {
@@ -86,10 +77,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+        if (item.getItemId() == android.R.id.home) {
+            binding.drawerLayout.openDrawer(GravityCompat.START);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -99,27 +89,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (menuItem.getItemId()) {
             case R.id.navMenuHome:
                 replaceFragment(demoFragment);
-                toolbar.setTitle(getString(R.string.library_app_name));
+                binding.toolbar.setTitle(getString(R.string.library_app_name));
                 menuItem.setChecked(true);
                 break;
             case R.id.navMenuAboutLibrary:
                 replaceFragment(aboutLibraryFragment);
-                toolbar.setTitle(getString(R.string.about_library));
+                binding.toolbar.setTitle(getString(R.string.about_library));
                 menuItem.setChecked(true);
                 break;
             case R.id.navMenuGithub:
                 replaceFragment(githubFragment);
-                toolbar.setTitle(getString(R.string.source_code));
+                binding.toolbar.setTitle(getString(R.string.source_code));
                 menuItem.setChecked(true);
                 break;
             case R.id.navMenuIssueFeedback:
                 replaceFragment(issueFeedBackFragment);
-                toolbar.setTitle(getString(R.string.issues_and_feedback));
+                binding.toolbar.setTitle(getString(R.string.issues_and_feedback));
                 menuItem.setChecked(true);
                 break;
             case R.id.navMenuDonateBeer:
                 replaceFragment(donateBeerFragment);
-                toolbar.setTitle(getString(R.string.thanks_for_the_beer));
+                binding.toolbar.setTitle(getString(R.string.thanks_for_the_beer));
                 AppUtils.showShortToast(this,
                         getString(R.string.thats_so_nice_of_you));
                 break;
@@ -136,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 AppUtils.shareLibraryApp(this);
                 break;
         }
-        mDrawerLayout.closeDrawers();
+        binding.drawerLayout.closeDrawers();
         return true;
     }
 
