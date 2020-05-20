@@ -55,7 +55,7 @@ class DemoFragment : Fragment(), LinkPreviewListener {
                 binding.linkPreviewLayout.linkTitle.text = linkInfo.title
                 binding.linkPreviewLayout.linkDesc.text = linkInfo.description
                 binding.linkPreviewLayout.linkUrl.text = linkInfo.url
-                binding.linkPreviewLayout.linkDesc.visibility = if (linkInfo.description?.isEmpty() == true) View.GONE else View.VISIBLE
+                binding.linkPreviewLayout.linkDesc.visibility = if (linkInfo.description?.isEmpty()?:false) View.GONE else View.VISIBLE
                 Glide.with(it)
                         .load(linkInfo.imageUrl)
                         .addListener(object : RequestListener<Drawable?> {
