@@ -1,1 +1,1 @@
-include ':examplelinkpreview', ':linkpreviewedittext'
+include ':demolinkpreviewedittext', ':linkpreviewedittext'
